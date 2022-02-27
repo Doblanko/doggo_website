@@ -12,6 +12,7 @@
     },
     "rules": {
         "brace-style": "off",
+        "func-names": "off",
         "comma-dangle": "off",
         "consistent-return": "off",
         "no-unused-vars": [

@@ -1,5 +1,6 @@
 const express = require('express');
 const cors = require('cors');
+// Passport is a singleton object
 const passport = require('passport');
 
 /**
@@ -22,7 +23,7 @@ require('./models/user');
 // Pass the global passport object into the configuration function
 // If you declare a variable in a file without using const/let and then assign a value to it, the
 // global object will set a property for this variable that is what require without assigning to a variable does
-require('./config/passport')(passport);
+require('./config/passport');
 
 // This will initialize the passport object on every request
 app.use(passport.initialize());
