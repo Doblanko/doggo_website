@@ -1,18 +1,29 @@
-import mongoose from 'mongoose';
+/* Subsequent require('mongoose') call. Not the first.
+ ** The require(‘mongoose’) call above returns a Singleton object. It means that the first time
+ ** you call require(‘mongoose’), it is creating an instance of the Mongoose class and returning it.
+ ** On subsequent calls, it will return the same instance that was created and returned to you the first
+ ** time because of how module import/export works in ES6.
+ */
+const mongoose = require('mongoose');
 
 const { Schema } = mongoose;
 
-const userSchema = new Schema({
-    username: {
-        type: String,
-        unique: true,
-        required: true,
-    },
+const UserSchema = new Schema({
+  username: {
+    type: String,
+    unique: true,
+    required: true,
+  },
+  hash: {
+    type: String,
+    required: true,
+  },
+  salt: {
+    type: String,
+    required: true,
+  },
+});
 
-    password: {
-        type: String,
-        required: true
-    }
-}
-    
-)
+// create the user model
+// by not assigning it a variable it goes to the global scope
+mongoose.model('User', UserSchema);

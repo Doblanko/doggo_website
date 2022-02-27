@@ -1,55 +1,49 @@
-import 'dotenv/config'; // make this the top import so anything that uses the env variables is defined
-import cors from 'cors';
-import session from 'express-session';
-import passport from 'passport';
-import LocalStrategy from 'passport-local';
-import express from 'express';
+const express = require('express');
+const cors = require('cors');
+const passport = require('passport');
 
+/**
+ * -------------- GENERAL SETUP ----------------
+ */
+
+// Gives us access to variables set in the .env file via `process.env.VARIABLE_NAME` syntax
+// Only need to call once for the whole file. It loads the env variables to the node process environment.
+require('dotenv').config();
+
+// Create the Express application
 const app = express();
 
-app.use(cors());
-app.use(express.json()); // allow to extract data payload from POST request body
-app.use(express.urlencoded({ extended: true })); // allow to extract data payload from post request from HTML form
+// Configures the database and opens a global connection that can be used in any module with `mongoose.connection`
+require('./config/database');
 
-// for authentication
-app.use(
-  session({
-    secret: process.env.session_secret,
-    resave: false,
-    saveUninitialized: true,
-  })
-);
+// Must first load the models
+require('./models/user');
+
+// Pass the global passport object into the configuration function
+// If you declare a variable in a file without using const/let and then assign a value to it, the
+// global object will set a property for this variable that is what require without assigning to a variable does
+require('./config/passport')(passport);
+
+// This will initialize the passport object on every request
 app.use(passport.initialize());
-app.use(passport.session());
-passport.use(
-  new LocalStrategy((username, password, done) => {
-    username.findOne({ username }, (err, user) => {
-      if (err) {
-        return done(err);
-      }
 
-      if (!user) {
-        return done(null, false, { message: 'Incorrect username' });
-      }
+// Instead of using body-parser middleware, use the new Express implementation of the same thing
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-      if (user.password !== password) {
-        return done(null, false, { message: 'Incorrect Password' });
-      }
+// Allows our React application to make HTTP requests to Express application
+app.use(cors());
 
-      return done(null, user);
-    });
-  })
-);
-passport.serializeUser(function (user, done) {
-  done(null, user.id);
-});
+/**
+ * -------------- ROUTES ----------------
+ */
 
-passport.deserializeUser(function (id, done) {
-  User.findById(id, function (err, user) {
-    done(err, user);
-  });
-});
+// Imports all of the routes from ./routes/index.js
+app.use(require('./routes'));
 
-app.listen(3000, () => {
-  console.log('Listening on port 3000!');
-});
+/**
+ * -------------- SERVER ----------------
+ */
+
+// Server listens on port
+app.listen(process.env.PORT);

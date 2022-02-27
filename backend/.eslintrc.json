@@ -1,7 +1,6 @@
 {
     "env": {
-        "browser": true,
-        "es2021": true
+        "browser": true
     },
     "extends": [
         "airbnb-base",
@@ -12,11 +11,9 @@
         "sourceType": "module"
     },
     "rules": {
-        "brace-style": [
-            "error",
-            "stroustrup"
-        ],
+        "brace-style": "off",
         "comma-dangle": "off",
+        "consistent-return": "off",
         "no-unused-vars": [
             "warn"
         ],
@@ -25,6 +22,7 @@
         ],
         "one-var": [
             "off"
-        ]
+        ],
+        "no-underscore-dangle": "off"
     }
 }
