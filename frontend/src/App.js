@@ -1,23 +1,16 @@
-import logo from './logo.svg';
-import './App.css';
+import useToken from "./useToken";
+import { Routes, Route, Navigate } from "react-router-dom";
 
-function App() {
+const App = () => {
+  const { token, setToken } = useToken()
+    if(!token) {
+      return (
+        <Navigate replace to='/login'/> 
+      )
+    }
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <h1>Main App</h1>
     </div>
   );
 }
