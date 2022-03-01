@@ -11,18 +11,19 @@ const userController = require('../controllers/userController');
  * Below is the custom callback implementation
  */
 const requireLogin = function (req, res, next) {
-  passport.authenticate('local', function (err, user, info) {
+  passport.authenticate('local', (err, user, info) => {
     if (err) {
       return next(err);
     }
     if (!user) {
       res.status(401).json(info); // info contains the error message from the localStrategy
     } else {
-      // if user authenticated, maintain the session
+      // if user authenticated, apply the user to the requst
       // move onto the login function
-      req.login(user);
+      req.user = user;
+      next();
     }
-  })(req, res, next);
+  })(req, res, next); // normally (req, res, next) are intercepted by default, but you need to manually IIFE this with parameters with custom callback
 };
 
 const requireAuth = passport.authenticate('jwt', { session: false });
