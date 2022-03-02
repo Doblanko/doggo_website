@@ -39,7 +39,7 @@ const localLogin = new LocalStrategy(
        */
       if (!user) {
         return done(null, false, {
-          error: 'Login failed. Please try again.',
+          message: 'Login failed. Please try again.',
         });
       }
 
@@ -53,7 +53,7 @@ const localLogin = new LocalStrategy(
         // password didn't match
         if (!isMatch) {
           return done(null, false, {
-            error: 'Login failed. Please try again.',
+            message: 'Login failed. Please try again.',
           });
         }
         // password matched
@@ -66,19 +66,19 @@ const localLogin = new LocalStrategy(
 
 /** A list of all possible options
  * const allPjassportJWTOptions = {
- * jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
- * secretOrKey: PUB_KEY || secret phrase,
- * issuer: 'enter issuer here',
- * audience: 'enter audience here',
- * algorithms: ['RS256'], RS256 for aysmmetric key, HS256 for a symmetric key
- * ignoreExpiration: false,
- * jsonWebTokenOptions: {
- *   complete: false,
- *   clockTolerance: '',
- *   maxAge: '2d', // 2days
- *   clockTimestamp: '100',
- *   nonse: 'string here for OpenId'
- *  }
+ *   jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),      // where the token can be found
+ *   secretOrKey: PUB_KEY || secret phrase,
+ *   issuer: 'enter issuer here',
+ *   audience: 'enter audience here',
+ *   algorithms: ['RS256'], RS256 for aysmmetric key, HS256 for a symmetric key
+ *   ignoreExpiration: false,
+ *   jsonWebTokenOptions: {
+ *     complete: false,
+ *     clockTolerance: '',
+ *     maxAge: '2d', // 2days
+ *     clockTimestamp: '100',
+ *     nonse: 'string here for OpenId'
+ *   }
  * }
  */
 
@@ -105,7 +105,7 @@ const jwtAuth = new JwtStrategy(jwtOptions, function verify(jwtPayload, done) {
       return done(null, user);
     }
     // didn't find a user, no error
-    return done(null, false);
+    return done(null, false, { message: 'The user no longer exists.' });
   });
 });
 
