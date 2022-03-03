@@ -1,8 +1,11 @@
 import { useState } from 'react';
 
+/** Custom Hooks
+ * By convention, custom Hooks start with the keyword 'use'
+ */
 export default function useToken() {
   const getToken = () => {
-    const tokenString = sessionStorage.getItem('token');
+    const tokenString = localStorage.getItem('token');
     const tokenJSON = JSON.parse(tokenString);
     /** '?.' explanation
      * need to use the optional chaining operator '?.' when accessing token because when you
@@ -16,10 +19,10 @@ export default function useToken() {
   const [token, setToken] = useState(getToken());
 
   const saveToken = (tokenJSON) => {
-    sessionStorage.setItem('token', JSON.stringify(tokenJSON))
+    localStorage.setItem('token', JSON.stringify(tokenJSON))
     setToken(tokenJSON.token)
   }
-
+  // return as an object to allow destructuring
   return {
     setToken: saveToken,
     token

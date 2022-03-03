@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
+import { Navigate } from 'react-router-dom';
 
-const Login = () => {
+const Login = ({ setToken }) => {
     // useState returns the current state and a function that updates it
     // done in array destructuring syntax
     const [state, setState] = useState({
@@ -23,7 +24,12 @@ const Login = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         const tokenJSON = await loginUser(state);
-        console.log(tokenJSON)
+        if (tokenJSON.success === true) {
+            setToken(tokenJSON);
+            console.log('success')
+            return <Navigate replace to='/'/>
+        };
+        
     }
 
     const handleChange = (e) => {
@@ -52,7 +58,6 @@ const Login = () => {
                     <button type='submit'>Submit</button>
                 </div>
             </form>
-            <form onSubmit={handleSubmit}/>
         </div>
     )
 }

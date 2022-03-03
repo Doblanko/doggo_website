@@ -1,6 +1,7 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, } from 'react-router-dom';
 import App from './App';
 import Login from './login';
+import useToken from './useToken';
 
 /** Route Explanation
  * Route: Those are our routes with a path, which equals the url path, and a component
@@ -20,12 +21,12 @@ import Login from './login';
  */
 
 const RouteSwitch = () => {
-
+  const { setToken } = useToken();
     return (
         <BrowserRouter>
             <Routes>
                 <Route path='/' element={<App/>}/>
-                <Route path='/login' element={<Login/>}/>
+                <Route path='/login' element={<Login setToken={ setToken }/>}/>
             </Routes>
         </BrowserRouter>
     )
