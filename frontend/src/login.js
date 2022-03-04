@@ -22,12 +22,14 @@ const Login = ({ setToken }) => {
     }
 
     const handleSubmit = async (e) => {
+        // have to explicitly call preventDefault in functional components
         e.preventDefault();
         const tokenJSON = await loginUser(state);
         if (tokenJSON.success === true) {
             setToken(tokenJSON);
             console.log('success')
-            return <Navigate replace to='/'/>
+            /*********************************************************************************/
+            // What to do after successful login
         };
         
     }

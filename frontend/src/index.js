@@ -1,12 +1,18 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
-import RouteSwitch from './RouteSwitch';
+import App from './App';
 
 ReactDOM.render(
   <React.StrictMode>
-    <RouteSwitch/>
+    <BrowserRouter>
+    <Routes>
+        <Route path='/' element={<App/>}/>
+        <Route path='/login' element={<Login setToken={ setToken }/>}/>
+      </Routes>
+    </BrowserRouter>
   </React.StrictMode>,
   document.getElementById('root')
 );

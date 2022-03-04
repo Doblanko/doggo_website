@@ -26,12 +26,14 @@ function requireLogin(req, res, next) {
       return next(err);
     }
     // This catches errors in token validation that weren't code breaking in the validation code (incorrect username/password, etc).
+    // info contains the error message from the Strategy (either built in or user defined custom)
     if (info) {
       return res.status(401).json(info);
     }
     // catches error of user no longer existing or not found
+    // don't actually need this since we have a custom error message set and the info will catch this error above
     if (!user) {
-      res.status(401).json(info); // info contains the error message from the localStrategy
+      res.status(401).json(info);
     } else {
       // if user authenticated, apply the user to the requst
       // move onto the login function
@@ -49,6 +51,7 @@ function requireAuth(req, res, next) {
     }
     // info contains the message sent as the third parameter in done(err, user, info) in the strategy definition
     // This catches errors in token validation that weren't code breaking in the validation code (token expired, invalid token, etc).
+    // don't actually need this since we have a custom error message set and the info will catch this error above
     if (info) {
       return res.status(401).json(info);
     }
@@ -59,6 +62,7 @@ function requireAuth(req, res, next) {
       // successful authentication
       // if user authenticated, apply the user to the requst
       // move on to the protected route
+      // recommended to actually use req.login for sessions (this is not a session)
       req.user = user;
       next();
     }

@@ -36,7 +36,10 @@ const localLogin = new LocalStrategy(
        *
        * If we don't find a user in the database, that doesn't mean there is an application error,
        * so we use `null` for the error value, and `false` for the user value
+       *
+       * The third parameter is the custom failure message sent.
        */
+      // The user wasn't found. Likely an incorrect username.
       if (!user) {
         return done(null, false, {
           message: 'Login failed. Please try again.',

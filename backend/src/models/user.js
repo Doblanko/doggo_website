@@ -22,9 +22,14 @@ const UserSchema = new Schema({
   },
 });
 
-// save the hashed password
-// note that bcrypt appends the salt to the hashed string
+/**
+ * Function that runs before a save action
+ * Hash the password and save it
+ * Note that bcrypt appends the salt to the hashed string instead of storing it separately
+ * Callback has to be a normal function because it needs proper 'this' context of the document calling it
+ */
 UserSchema.pre('save', function (next) {
+  // rename 'this' to user to make it more clear
   const user = this;
   const SALT_FACTOR = 5;
 
@@ -50,9 +55,11 @@ UserSchema.methods.comparePassword = async function compare(
   done
 ) {
   try {
+    // password compared successfully (no error, could match or not match)
     const isMatch = await bcrypt.compare(passwordAttempt, this.password);
     return done(null, isMatch);
   } catch (err) {
+    // error comparing password
     return done(err, false);
   }
 };

@@ -9,6 +9,7 @@ const passport = require('passport');
 
 // Gives us access to variables set in the .env file via `process.env.VARIABLE_NAME` syntax
 // Only need to call once for the whole file. It loads the env variables to the node process environment.
+// Naming convenction is for the variables to be all caps
 require('dotenv').config();
 
 // Create the Express application

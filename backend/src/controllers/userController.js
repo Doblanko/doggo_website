@@ -14,7 +14,7 @@ const utils = require('../utils');
 // removed the next parameter since it wasn't used
 const register = (req, res) => {
   // create a new user with the User Model
-  // the model will hash the password
+  // the model will hash the password with the pre hook
   const newUser = new User({
     username: req.body.username,
     password: req.body.password,
