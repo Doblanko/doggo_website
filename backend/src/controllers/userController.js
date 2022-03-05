@@ -20,13 +20,14 @@ const register = (req, res) => {
     password: req.body.password,
   });
 
-  try {
-    newUser.save().then((user) => {
+  newUser
+    .save()
+    .then((user) => {
       res.json({ success: true, user });
+    })
+    .catch((err) => {
+      res.json({ success: false, message: err.message });
     });
-  } catch (err) {
-    res.json({ success: false, msg: err });
-  }
 };
 
 // removed the next parameter since it wasn't used

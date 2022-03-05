@@ -25,15 +25,18 @@ const UserSchema = new Schema({
 /**
  * Function that runs before a save action
  * Hash the password and save it
- * Note that bcrypt appends the salt to the hashed string instead of storing it separately
- * Callback has to be a normal function because it needs proper 'this' context of the document calling it
+ * Note that bcrypt appends the salt to the hashed string instead of storing it
+ * separately
+ * Callback has to be a normal function because it needs proper 'this' context
+ * of the document calling it
  */
 UserSchema.pre('save', function (next) {
   // rename 'this' to user to make it more clear
   const user = this;
   const SALT_FACTOR = 5;
 
-  // Only run this function if password was modified (not on other update functions)
+  // Only run this function if password was modified (not on other update
+  // functions)
   // maybe only the username was updated
   if (!user.isModified('password')) {
     return next();
@@ -47,6 +50,28 @@ UserSchema.pre('save', function (next) {
     user.password = hash;
     next();
   });
+});
+
+/** Error handler
+ * Mongoose error handlers are made using post middleware. To mark post
+ * middleware as an error handler, you need to make it take 3 parameters.
+ *
+ * Error handling middleware only gets called if an error occured in a pre hook,
+ * if save throws an error, or if a previous post hook called next() with an
+ * error.
+ *
+ */
+UserSchema.post('save', function (err, doc, next) {
+  /** Handle duplicate key error
+   * Converts a MongoDB specific errors (like duplicate key) as well as
+   * mongoose specific errors (like validation erros) into something that makes
+   * sense for the application
+   */
+  if (err.name === 'MongoServerError' && err.code === 11000) {
+    next(new Error('There was a duplicate key error'));
+  } else {
+    next(err);
+  }
 });
 
 // check if the right password was entered
