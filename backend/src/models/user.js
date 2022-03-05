@@ -68,10 +68,9 @@ UserSchema.post('save', function (err, doc, next) {
    * sense for the application
    */
   if (err.name === 'MongoServerError' && err.code === 11000) {
-    next(new Error('There was a duplicate key error'));
-  } else {
-    next(err);
+    return next(new Error('There was a duplicate key error'));
   }
+  next(err);
 });
 
 // check if the right password was entered

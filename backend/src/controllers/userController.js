@@ -20,6 +20,16 @@ const register = (req, res) => {
     password: req.body.password,
   });
 
+  /** Saving and error handling
+   * Can't use try-catch statements to handle exceptions thrown asynchronously,
+   * as the function has "returned" before any exception is thrown. Need to
+   * intead use promise.then and promise.catch methods, which represent the
+   * asynchronous equivalent of the try-catch statement. Another option is
+   * using the async/await syntax with try-catch.
+   *
+   * In this case, save() is asynchronous so any error here needs to be caught
+   * with asynchronous syntax
+   */
   newUser
     .save()
     .then((user) => {
