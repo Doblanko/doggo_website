@@ -59,7 +59,6 @@ UserSchema.pre('save', function (next) {
  * Error handling middleware only gets called if an error occured in a pre hook,
  * if save throws an error, or if a previous post hook called next() with an
  * error.
- *
  */
 UserSchema.post('save', function (err, doc, next) {
   /** Handle duplicate key error

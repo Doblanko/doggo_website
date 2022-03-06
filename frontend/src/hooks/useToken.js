@@ -4,6 +4,7 @@ import { useState } from 'react';
  * By convention, custom Hooks start with the keyword 'use'
  */
 export default function useToken() {
+  // pull an existing token from localStorage, if available
   const getToken = () => {
     const tokenString = localStorage.getItem('token');
     const tokenJSON = JSON.parse(tokenString);
@@ -21,7 +22,7 @@ export default function useToken() {
   const saveToken = (tokenJSON) => {
     // save to localstorage
     localStorage.setItem('token', JSON.stringify(tokenJSON))
-    // save to state
+    // save to compenent state
     setToken(tokenJSON.token)
   }
   // return as an object to allow destructuring

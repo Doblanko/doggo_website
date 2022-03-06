@@ -1,7 +1,18 @@
 import React, { useState } from 'react';
-import { Navigate } from 'react-router-dom';
+import { useNavigate, useLocation, unstable_HistoryRouter } from "react-router-dom";
+import { useAuthContext } from './AuthProvider';
+import fetchData from '../utils/fetchData2';
 
-const Login = ({ setToken }) => {
+const Login = () => {
+    // For redirect after authentication
+    const navigate = useNavigate()
+    /**
+     * I believe the useLocation hook is Singleton in a way. It returns the location
+     * object used by the react-router. That is how you can call it in each
+     * component and get access to the same state.
+     */
+    const location = useLocation()
+
     // useState returns the current state and a function that updates it
     // done in array destructuring syntax
     const [state, setState] = useState({
@@ -9,29 +20,34 @@ const Login = ({ setToken }) => {
         password: ''
     })
 
-    const loginUser = async (credentials) => {
-        const response = await fetch('http://localhost:3000/users/login', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(credentials)
-        })
-        const data = await response.json()
-        return data
-    }
+    /** Consume the context
+     * Only need setToken from the context
+     * Imported AuthContext at the top of the file
+     */
+    const { setToken } = useAuthContext();
 
-    const handleSubmit = async (e) => {
+    const handleSubmit = (e) => {
         // have to explicitly call preventDefault in functional components
         e.preventDefault();
-        const tokenJSON = await loginUser(state);
+        const { data, loading, error } = fetchData(
+            'http://localhost:3000/users/login',
+            'POST',
+            { 'Content-Type': 'application/json'},
+            state
+            );
+        console.log(data)
+
         if (tokenJSON.success === true) {
             setToken(tokenJSON);
             console.log('success')
-            /*********************************************************************************/
-            // What to do after successful login
+            /** Redirect the user after successful login
+             * When a login happens, we can take the previous page to redirect
+             * the user to this desired page. If this page was never set as
+             * state, we default to the Dashboard page:
+             */
+            const origin = location.state?.from?.pathname || '/'
+            navigate(origin);
         };
-        
     }
 
     const handleChange = (e) => {

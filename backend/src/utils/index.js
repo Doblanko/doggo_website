@@ -85,6 +85,7 @@ function issueJWT(user) {
   };
 
   // RS256 for aysmmetric key, HS256 for a symmetric key
+  // Using a symmetric key
   const signedToken = jsonwebtoken.sign(payload, process.env.JWT_SECRET, {
     expiresIn,
     algorithm: 'HS256',

@@ -1,6 +1,13 @@
-import { Route, Routes, Navigate } from "react-router-dom";
-import Login from './login';
-import useToken from './useToken';
+import { Route, Routes } from "react-router-dom";
+import { AuthProvider } from "./components/AuthProvider";
+import NavBar from "./components/NavBar";
+import Login from './components/Login';
+import ProtectedRoute from "./components/ProtectedRoute";
+import Dashboard from "./components/Dashboard";
+import Home from "./components/Home";
+import NoMatch from "./components/NoMatch";
+
+
 
 /** Route Explanation
  * Route: Those are our routes with a path, which equals the url path, and a component
@@ -20,15 +27,42 @@ import useToken from './useToken';
  */
 
 const App = () => {
-  // destructure
-  const { token, setToken } = useToken()
-  if (!token) {
-    return <Navigate replace to='/login'/>
-  }
+ 
+  // if (!token) {
+  //   return (<Navigate replace to='/login'/>)
+  // }
   return (
-    <div className="App">
+    <AuthProvider>
+      <NavBar/>
+        <div>
+          <Routes>
+            <Route path='/' element={<Home/>}/>
+            <Route path='/login' element={<Login/>}/>
+            {
+            /** Protected Routes
+             * the Dashboard component should only be accessible for
+             * authenticated users. Therefore the ProtectedRoute componenet is
+             * wrapped around itmalicious user could still modify the client-side
+             * code in the browser (e.g. removing the condition to redirect from
+             * the ProtectedRoute). Therefore, all sensitive API calls that
+             * happen on protected pages (e.g. Dashboard page) need to be secured
+             * from the server-side too.
+             */ 
+            }
+            <Route
+              path='dashboard'
+              element={
+                <ProtectedRoute>
+                  <Dashboard />
+                </ProtectedRoute>
+              }
+              />
+            { /* default case if nothing matches */ }
+            <Route path='*' element={<NoMatch />}/>
+          </Routes>
+        </div>
+    </AuthProvider>
       
-    </div>
   );
 }
 
