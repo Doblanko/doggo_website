@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
-import { useNavigate, useLocation, unstable_HistoryRouter } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useAuthContext } from './AuthProvider';
-import fetchData from '../utils/fetchData2';
 
 const Login = () => {
     // For redirect after authentication
@@ -17,7 +16,8 @@ const Login = () => {
     // done in array destructuring syntax
     const [state, setState] = useState({
         username: '',
-        password: ''
+        password: '',
+        incorrectFlag: false,
     })
 
     /** Consume the context
@@ -26,18 +26,23 @@ const Login = () => {
      */
     const { setToken } = useAuthContext();
 
-    const handleSubmit = (e) => {
+    const login = async (credentials) => {
+        const response = await fetch('http://localhost:3000/users/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json'},
+            body: JSON.stringify(credentials)
+        });
+        const dataJSON = await response.json()
+        return dataJSON
+    }
+
+    const handleSubmit = async (event) => {
         // have to explicitly call preventDefault in functional components
-        e.preventDefault();
-        const { data, loading, error } = fetchData(
-            'http://localhost:3000/users/login',
-            'POST',
-            { 'Content-Type': 'application/json'},
-            state
-            );
-        console.log(data)
+        event.preventDefault();
+        const tokenJSON = await login(state)
 
         if (tokenJSON.success === true) {
+            // use the token hook
             setToken(tokenJSON);
             console.log('success')
             /** Redirect the user after successful login
@@ -47,13 +52,20 @@ const Login = () => {
              */
             const origin = location.state?.from?.pathname || '/'
             navigate(origin);
-        };
+        } else {
+            setState( (prevState) => ({
+                ...prevState,
+                incorrectFlag: true
+            }));
+        }
     }
 
     const handleChange = (e) => {
         const {id, value} = e.target
         // update whatever field is being typed in
         // wrap function in brackets for an implicit return of an object
+        // state hooks don't automatically merge changes, need to explicitly
+        // merge them
         setState( (prevState) => ({
             ...prevState,
             [id]: value
@@ -75,6 +87,8 @@ const Login = () => {
                 <div>
                     <button type='submit'>Submit</button>
                 </div>
+                { state.incorrectFlag === true && <p>Incorrect username
+                    or password</p>}
             </form>
         </div>
     )

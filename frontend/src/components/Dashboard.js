@@ -1,7 +1,10 @@
  import { useAuthContext } from "./AuthProvider"
+ import { useFetch } from "../hooks/useFetch"
  const Dashboard = () => {
      const { token } = useAuthContext();
-    
+
+     const { data, error, loading } = useFetch
+
 
      return (
          <div>
