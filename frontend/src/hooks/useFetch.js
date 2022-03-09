@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-export default function useFetch(url, method, header, body) {
+export default function useFetch(url, method, header) {
     /**
      * Usually we have 2 state variables that are data, error, and loading
      * created using useState to store the response data, error, and loading,
@@ -27,22 +27,24 @@ export default function useFetch(url, method, header, body) {
             async function(){
                 try{
                     setLoading(true)
+                    console.log('Testing fetch')
+                    //await setTimeout(() => console.log('waiting'), 5000)
                     const response = await fetch(url, {
                         method: method,
                         headers: header,
-                        body: JSON.stringify(body)
                     })
                     const dataJSON = await response.json()
                     setData(dataJSON)
                 }catch(err){
-                    setError(err)
+                    setLoading(false)
+                    setError('An error occurred')
                 }finally{
                     setLoading(false)
                 }
             }
         )() // immediately invoke the internal async function when use effect calls
         // the arrow function
-    })
+    }, []);
 
     return { data, error, loading }
 }
