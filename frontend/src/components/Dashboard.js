@@ -7,17 +7,16 @@
      const { data, error, loading } = useFetch(
          'http://localhost:3000/users/protected',
          'GET',
-         { 'Content-Type': 'application/json',
-         'Authorization': token },
+         token,
          )
 
      return (
          <div>
             <h1> This is a protected component </h1>
             <p>Token is {token}</p>
-            { loading && <p>Loading is { loading }</p>}
-            { data && <p>Data is { data }</p>}
-            { error && <p>Error is</p>}
+            { loading && <p>Loading is { loading.toString() }</p>}
+            { data && <p>Data is { data.msg }</p>}
+            { error && <p>Error is {error}</p>}
          </div>
          
      )

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-export default function useFetch(url, method, header) {
+export default function useFetch(url, method, token) {
     /**
      * Usually we have 2 state variables that are data, error, and loading
      * created using useState to store the response data, error, and loading,
@@ -23,28 +23,34 @@ export default function useFetch(url, method, header) {
      * call function inside it when rendered.
      */
     useEffect(() => {
-        (
-            async function(){
+        const fetchData = async function(){
                 try{
                     setLoading(true)
-                    console.log('Testing fetch')
-                    //await setTimeout(() => console.log('waiting'), 5000)
                     const response = await fetch(url, {
                         method: method,
-                        headers: header,
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': token 
+                        }
                     })
                     const dataJSON = await response.json()
                     setData(dataJSON)
                 }catch(err){
+                    console.log('error occured')
                     setLoading(false)
                     setError('An error occurred')
                 }finally{
                     setLoading(false)
                 }
-            }
-        )() // immediately invoke the internal async function when use effect calls
-        // the arrow function
-    }, []);
+        }
 
+        fetchData();
+        
+    }, [url, method, token]);
+
+    // ** add logic for catching unauthorized server response********************************************************
+
+    // note that error will only hold errors in the fetch function
+    // data will have server side errors like unauthorized
     return { data, error, loading }
 }
