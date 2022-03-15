@@ -5,7 +5,8 @@ import useToken from "../hooks/useToken"
  * Use context to pass the token to all of the components. Can't import useToken
  * into every component that needs authentication because React will generate a 
  * new component each time. When you first render that component it will pull the
- * token from localStorage. However, for subsequent checks it will be in state.
+ * token from localStorage. However, for subsequent checks it will be in state
+ * for each component instance.
  * If the token is changed for whatever reason, all of the other components that
  * import useToken won't pull that new value from localStorage until the next
  * time you visit the site (they read from state during a browsing session and
@@ -16,6 +17,7 @@ import useToken from "../hooks/useToken"
 const AuthContext = React.createContext(null);
 
 // best practices to use this line in the Auth provider file
+// tells react to use the context created above
 const useAuthContext = () => React.useContext(AuthContext)
 
 /**

@@ -33,6 +33,8 @@ const Login = () => {
             body: JSON.stringify(credentials)
         });
         const dataJSON = await response.json()
+        console.log(dataJSON)
+        console.log(typeof(dataJSON))
         return dataJSON
     }
 

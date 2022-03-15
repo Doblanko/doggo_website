@@ -27,10 +27,6 @@ import NoMatch from "./components/NoMatch";
  */
 
 const App = () => {
- 
-  // if (!token) {
-  //   return (<Navigate replace to='/login'/>)
-  // }
   return (
     <AuthProvider>
       <NavBar/>

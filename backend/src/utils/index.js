@@ -14,7 +14,7 @@ const jsonwebtoken = require('jsonwebtoken');
  * Structure an be found in the source code for passport authenticate on github
  * A note:
  * You can remove that (req,res) at the bottom if you also remove the (req,res) => at the top.
- * authenticate() returns a middle that expects the regular arguments of (req, res, next).
+ * authenticate() returns a middleware that expects the regular arguments of (req, res, next).
  * So you are supposed to pass that returned function to the route directly. If you don't then you must
  * call the return function yourself which is what the (req,res) at the bottom is doing - it is calling the return value of authenticate()
  */
@@ -35,7 +35,7 @@ function requireLogin(req, res, next) {
     if (!user) {
       res.status(401).json(info);
     } else {
-      // if user authenticated, apply the user to the requst
+      // if user authenticated, apply the user to the request
       // move onto the login function
       req.user = user;
       next();
