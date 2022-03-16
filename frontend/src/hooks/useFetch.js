@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from 'react-router-dom';
 
 export default function useFetch(url, method, token) {
     /**
@@ -18,14 +19,30 @@ export default function useFetch(url, method, token) {
     const [data, setData] = useState(null);
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(false);
+
+    console.log('hook')
+
+    // For redirect on unauthorized error
+    const navigate = useNavigate()
     /**
      * To make an API call, use a useEffect hook because it will trigger the API
      * call function inside it when rendered.
+     * 
+     * Need our async function inside the arrow function because useEffect
+     * should only return nothing or a cleanup function. Async function returns
+     * an implicit promise.
      */
     useEffect(() => {
+        console.log('useeffect')
+
+        let isApiSubscribed = true;
+
         const fetchData = async function(){
                 try{
+                    console.log('data json1')
                     setLoading(true)
+                    console.log('data json2')
+                    console.log('data json 3')
                     const response = await fetch(url, {
                         method: method,
                         headers: {
@@ -33,24 +50,43 @@ export default function useFetch(url, method, token) {
                             'Authorization': token 
                         }
                     })
-                    const dataJSON = await response.json()
-                    setData(dataJSON)
+                    console.log('fetched')
+                    if(isApiSubscribed) {
+                        const dataJSON = await response.json()
+                        setData(dataJSON)
+                    }
                 }catch(err){
-                    console.log('error occured')
+                    console.log(err)
                     setLoading(false)
-                    setError('An error occurred')
+                    setError('Error') ///////////////// change to send the full error here
                 }finally{
+                    console.log('finally')
                     setLoading(false)
                 }
         }
-
+        
         fetchData();
+
+        /** Cleanup function
+         * Runs before component unmount and before the next scheduled effect
+         */
+        return () => {
+            console.log('cleanup')
+            isApiSubscribed = false
+        }
         
     }, [url, method, token]);
 
-    // ** add logic for catching unauthorized server response********************************************************
-
-    // note that error will only hold errors in the fetch function
-    // data will have server side errors like unauthorized
+    // if (data !== null && data.hasOwnProperty('name') && data.name === 'TokenExpiredError') {
+    //     console.log('redirect')
+    //     navigate('/login')
+    // } else {
+    //     // note that error will only hold errors in the fetch function
+    //     // data will have server side errors like unauthorized
+    //     console.log('send back data')
+    //     console.log(data)
+        
+    // }
+    console.log('return')
     return { data, error, loading }
 }
