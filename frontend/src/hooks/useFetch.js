@@ -20,7 +20,7 @@ export default function useFetch(url, method, token) {
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(false);
 
-    console.log('hook')
+    console.log('hook start')
 
     // For redirect on unauthorized error
     const navigate = useNavigate()
@@ -31,18 +31,18 @@ export default function useFetch(url, method, token) {
      * Need our async function inside the arrow function because useEffect
      * should only return nothing or a cleanup function. Async function returns
      * an implicit promise.
+     * 
+     * Async functions inside useEffect will trigger component updates after
+     * every setState call. Synchronous functions insde useEffect won't. This is
+     * because Async functions cause React not to batch the setStates properly.
      */
     useEffect(() => {
-        console.log('useeffect')
 
         let isApiSubscribed = true;
 
         const fetchData = async function(){
                 try{
-                    console.log('data json1')
                     setLoading(true)
-                    console.log('data json2')
-                    console.log('data json 3')
                     const response = await fetch(url, {
                         method: method,
                         headers: {
@@ -50,7 +50,6 @@ export default function useFetch(url, method, token) {
                             'Authorization': token 
                         }
                     })
-                    console.log('fetched')
                     if(isApiSubscribed) {
                         const dataJSON = await response.json()
                         setData(dataJSON)
@@ -60,7 +59,6 @@ export default function useFetch(url, method, token) {
                     setLoading(false)
                     setError('Error') ///////////////// change to send the full error here
                 }finally{
-                    console.log('finally')
                     setLoading(false)
                 }
         }
@@ -87,6 +85,5 @@ export default function useFetch(url, method, token) {
     //     console.log(data)
         
     // }
-    console.log('return')
     return { data, error, loading }
 }
