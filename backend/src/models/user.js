@@ -63,7 +63,7 @@ UserSchema.pre('save', function (next) {
 UserSchema.post('save', function (err, doc, next) {
   /** Handle duplicate key error
    * Converts a MongoDB specific errors (like duplicate key) as well as
-   * mongoose specific errors (like validation erros) into something that makes
+   * mongoose specific errors (like validation errors) into something that makes
    * sense for the application
    */
   if (err.name === 'MongoServerError' && err.code === 11000) {

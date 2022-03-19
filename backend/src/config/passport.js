@@ -60,7 +60,7 @@ const localLogin = new LocalStrategy(
           });
         }
         // password matched
-        // user authentiated and will be attached to the request
+        // user authenticated and will be attached to the request
         return done(null, user);
       });
     });
@@ -68,7 +68,7 @@ const localLogin = new LocalStrategy(
 );
 
 /** A list of all possible options
- * const allPjassportJWTOptions = {
+ * const allPassportJWTOptions = {
  *   jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),      // where the token can be found
  *   secretOrKey: PUB_KEY || secret phrase,
  *   issuer: 'enter issuer here',

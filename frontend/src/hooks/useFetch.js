@@ -62,14 +62,18 @@ export default function useFetch(url, method, token) {
                     setLoading(false)
                 }
         }
-        
         fetchData();
 
         /** Cleanup function
          * Runs before component unmount and before the next scheduled effect
+         * 
+         * This specific instance of the cleanup function ensures that if we 
+         * re-fetch the data before an older fetch finishes that the older fetch
+         * is terminated. Also makes sure that a fetch is terminated before the
+         * component unmounts to avoid an attempt to update an unmounted
+         * component.
          */
         return () => {
-            console.log('cleanup')
             isApiSubscribed = false
         }
         
