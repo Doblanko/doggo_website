@@ -37,29 +37,38 @@ export default function useFetch(url, method, token) {
      * because Async functions cause React not to batch the setStates properly.
      */
     useEffect(() => {
-
-        let isApiSubscribed = true;
+        /** Code to abort the fetch request
+         *  When a fetch is aborted, its promise rejects with an error
+         *  AbortError
+         */ 
+        const controller = new AbortController();
+        const signal = controller.signal;
+        let isApiSubscribed = true; // to prevent state updates
 
         const fetchData = async function(){
                 try{
                     setLoading(true)
                     const response = await fetch(url, {
+                        signal: signal,
                         method: method,
                         headers: {
                             'Content-Type': 'application/json',
                             'Authorization': token 
                         }
                     })
-                    if(isApiSubscribed) {
-                        const dataJSON = await response.json()
-                        setData(dataJSON)
-                    }
+                    const dataJSON = await response.json()
+                    setData(dataJSON)
                 }catch(err){
-                    console.log(err)
-                    setLoading(false)
-                    setError('Error') ///////////////// change to send the full error here
+                    // only update state if fetch wasn't cancelled
+                    if (isApiSubscribed) {
+                        setLoading(false)
+                        setError('Error') ///////////////// change to send the full error here
+                    }
                 }finally{
-                    setLoading(false)
+                    // only update state if fetch wasn't cancelled
+                    if (isApiSubscribed) {
+                        setLoading(false)
+                    }
                 }
         }
         fetchData();
@@ -74,6 +83,7 @@ export default function useFetch(url, method, token) {
          * component.
          */
         return () => {
+            controller.abort();
             isApiSubscribed = false
         }
         
