@@ -33,8 +33,6 @@ const Login = () => {
             body: JSON.stringify(credentials)
         });
         const dataJSON = await response.json()
-        console.log(dataJSON)
-        console.log(typeof(dataJSON))
         return dataJSON
     }
 
@@ -46,7 +44,6 @@ const Login = () => {
         if (tokenJSON.success === true) {
             // use the token hook
             setToken(tokenJSON);
-            console.log('success')
             /** Redirect the user after successful login
              * When a login happens, we can take the previous page to redirect
              * the user to this desired page. If this page was never set as

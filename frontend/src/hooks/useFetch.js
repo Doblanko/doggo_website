@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from 'react-router-dom';
 
 export default function useFetch(url, method, token) {
     /**
@@ -20,10 +19,6 @@ export default function useFetch(url, method, token) {
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(false);
 
-    console.log('hook start')
-
-    // For redirect on unauthorized error
-    const navigate = useNavigate()
     /**
      * To make an API call, use a useEffect hook because it will trigger the API
      * call function inside it when rendered.
@@ -43,7 +38,6 @@ export default function useFetch(url, method, token) {
          */ 
         const controller = new AbortController();
         const signal = controller.signal;
-        let isApiSubscribed = true; // to prevent state updates
 
         const fetchData = async function(){
                 try{
@@ -57,18 +51,42 @@ export default function useFetch(url, method, token) {
                         }
                     })
                     const dataJSON = await response.json()
+
+                    /**
+                     * Catch the unauthorized error that would be hidden in the
+                     * response variable and send it to the fetch error handling.
+                     */
+                    if (dataJSON.message === 'jwt expired') {
+                        throw new Error('unauthorized')
+                    }
                     setData(dataJSON)
                 }catch(err){
-                    // only update state if fetch wasn't cancelled
-                    if (isApiSubscribed) {
+                    /** Error handling
+                     * First error is to redirect on unauthorized
+                     * 
+                     * Need to separate out AbortError because if the fetch was
+                     * aborted the component was unmounted and we can't update
+                     * the error and loading state.
+                     */
+                    if (err.message === 'unauthorized') {
+                        /**
+                         * Remove token from local storage so the protected
+                         * route component causes a redirect to the login screen
+                         * on next component load. It also handles redirecting
+                         * back to the protected route after a successful login
+                         * 
+                         * Force a component load immediately
+                         */
+                        localStorage.removeItem('token');
+                        setLoading(false); ////////////////////////////////////need to force a rerender
+                    } else if (err.name === 'AbortError') {
+                        console.log('Abort Error')
+                    } else {
                         setLoading(false)
-                        setError('Error') ///////////////// change to send the full error here
+                        setError(err) ///////////////// change to send the full error here
                     }
                 }finally{
-                    // only update state if fetch wasn't cancelled
-                    if (isApiSubscribed) {
-                        setLoading(false)
-                    }
+                    setLoading(false)
                 }
         }
         fetchData();
@@ -84,20 +102,9 @@ export default function useFetch(url, method, token) {
          */
         return () => {
             controller.abort();
-            isApiSubscribed = false
         }
         
     }, [url, method, token]);
 
-    // if (data !== null && data.hasOwnProperty('name') && data.name === 'TokenExpiredError') {
-    //     console.log('redirect')
-    //     navigate('/login')
-    // } else {
-    //     // note that error will only hold errors in the fetch function
-    //     // data will have server side errors like unauthorized
-    //     console.log('send back data')
-    //     console.log(data)
-        
-    // }
     return { data, error, loading }
 }
