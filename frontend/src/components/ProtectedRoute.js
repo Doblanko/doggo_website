@@ -9,6 +9,8 @@ import { useAuthContext } from './AuthProvider';
  * Navigate component to the login page.
  */
 const ProtectedRoute = ({ children }) => {
+    ////////////////////////////////////////////////////////////update to handle expired tokens
+    // https://www.robinwieruch.de/react-router-private-routes/
     const { token } = useAuthContext();
     /** Smart redirect
      * 'Remember' the location from where the redirect happened to the login
