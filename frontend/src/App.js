@@ -37,8 +37,8 @@ const App = () => {
             {
             /** Protected Routes
              * the Dashboard component should only be accessible for
-             * authenticated users. Therefore the ProtectedRoute componenet is
-             * wrapped around itmalicious user could still modify the client-side
+             * authenticated users. Therefore the ProtectedRoute component is
+             * wrapped around it. Malicious user could still modify the client-side
              * code in the browser (e.g. removing the condition to redirect from
              * the ProtectedRoute). Therefore, all sensitive API calls that
              * happen on protected pages (e.g. Dashboard page) need to be secured
