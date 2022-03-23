@@ -37,7 +37,7 @@ UserSchema.pre('save', function (next) {
 
   // Only run this function if password was modified (not on other update
   // functions)
-  // maybe only the username was updated
+  // i.e. maybe only the username was updated
   if (!user.isModified('password')) {
     return next();
   }
