@@ -33,10 +33,25 @@ const AuthProvider = ({ children }) => {
    * instance of the hook. For more info read above comment for creating context.
    */
   const { token, setToken } = useToken()
-    
+
+  const handleLogin = async (credentials) => {
+        const response = await fetch('http://localhost:3000/users/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json'},
+            body: JSON.stringify(credentials)
+        });
+        const dataJSON = await response.json()
+        if (dataJSON.success === true) {
+            setToken(dataJSON);
+            return true
+        } else {
+            return false
+        }
+    }
     const value = {
         token,
-        setToken
+        setToken,
+        onLogin: handleLogin
     }
 
     return (

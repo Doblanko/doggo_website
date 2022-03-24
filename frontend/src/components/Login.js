@@ -21,29 +21,17 @@ const Login = () => {
     })
 
     /** Consume the context
-     * Only need setToken from the context
+     * Only need onLogin from the context
      * Imported AuthContext at the top of the file
      */
-    const { setToken } = useAuthContext();
-
-    const login = async (credentials) => {
-        const response = await fetch('http://localhost:3000/users/login', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json'},
-            body: JSON.stringify(credentials)
-        });
-        const dataJSON = await response.json()
-        return dataJSON
-    }
+    const { onLogin } = useAuthContext();
 
     const handleSubmit = async (event) => {
         // have to explicitly call preventDefault in functional components
         event.preventDefault();
-        const tokenJSON = await login(state)
+        const loginSuccess = await onLogin(state)
 
-        if (tokenJSON.success === true) {
-            // use the token hook
-            setToken(tokenJSON);
+        if (loginSuccess === true) {
             /** Redirect the user after successful login
              * When a login happens, we can take the previous page to redirect
              * the user to this desired page. If this page was never set as
