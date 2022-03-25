@@ -1,11 +1,11 @@
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
 const NavBar = () => {
     return (
         <nav style={{ margin: 10 }}>
-            <Link to="/" style={{ padding: 5 }}>Home</Link>
-            <Link to="/login" style={{ padding: 5 }}>Login</Link>
-            <Link to="/dashboard" style={{ padding: 5}}>Dashboard</Link>
+            <NavLink to="/" style={{ padding: 5 }}>Home</NavLink>
+            <NavLink to="/login" style={{ padding: 5 }}>Login</NavLink>
+            <NavLink to="/dashboard" style={{ padding: 5}}>Dashboard</NavLink>
       </nav>
     )
 }

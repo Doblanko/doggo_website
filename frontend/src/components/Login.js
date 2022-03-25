@@ -29,6 +29,7 @@ const Login = () => {
     const handleSubmit = async (event) => {
         // have to explicitly call preventDefault in functional components
         event.preventDefault();
+        
         const loginSuccess = await onLogin(state)
 
         if (loginSuccess === true) {
