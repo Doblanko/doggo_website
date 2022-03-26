@@ -2,6 +2,7 @@ import { Route, Routes } from "react-router-dom";
 import { AuthProvider } from "./components/AuthProvider";
 import NavBar from "./components/NavBar";
 import Login from './components/Login';
+import UploadForm from './components/UploadForm'
 import ProtectedRoute from "./components/ProtectedRoute";
 import Dashboard from "./components/Dashboard";
 import Home from "./components/Home";
@@ -34,6 +35,7 @@ const App = () => {
           <Routes>
             <Route path='/' element={<Home/>}/>
             <Route path='/login' element={<Login/>}/>
+            <Route path='/upload' element={<UploadForm/>}/>
             {
             /** Protected Routes
              * the Dashboard component should only be accessible for

@@ -2,6 +2,8 @@ const express = require('express');
 const cors = require('cors');
 // Passport is a singleton object
 const passport = require('passport');
+// For saving files
+const fileUpload = require('express-fileupload');
 
 /**
  * -------------- GENERAL SETUP ----------------
@@ -20,6 +22,7 @@ require('./config/database');
 
 // Must first load the models
 require('./models/user');
+require('./models/post');
 
 // Pass the global passport object into the configuration function
 // If you declare a variable in a file without using const/let and then assign a value to it, the
@@ -35,6 +38,9 @@ app.use(express.urlencoded({ extended: true }));
 
 // Allows our React application to make HTTP requests to Express application
 app.use(cors());
+
+// default options for file upload
+app.use(fileUpload());
 
 /**
  * -------------- ROUTES ----------------
