@@ -20,14 +20,26 @@ const savePost = (req, res) => {
   newPost
     .save()
     .then((post) => {
+      // check if no files found
       if (!req.files || Object.keys(req.files).length === 0) {
         return res.status(400).send('No files were uploaded.');
       }
 
-      // The name of the input field (i.e. "sampleFile") is used to retrieve the
-      // upload file
-      const { img } = req.files;
-      const uploadPath = path.join(__dirname, '..', '..', 'content', post._id);
+      /**
+       * The name of the input field (i.e. "sampleFile") is used to retrieve the
+       * upload file.
+       * For some reason it always names the single file as "file" so I switched
+       * it
+       */
+      const img = req.files.file;
+
+      const uploadPath = path.join(
+        __dirname,
+        '..',
+        '..',
+        'content',
+        post._id.toString()
+      );
 
       // Use the mv() method to place the file somewhere on your server
       img.mv(uploadPath, function (err) {
@@ -38,6 +50,7 @@ const savePost = (req, res) => {
       });
     })
     .catch((err) => {
+      console.log(err);
       console.log('Error saving post.');
     });
 };
