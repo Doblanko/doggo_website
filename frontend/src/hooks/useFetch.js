@@ -56,7 +56,7 @@ export default function useFetch(url, method, token) {
                         method: method,
                         headers: {
                             'Content-Type': 'application/json',
-                            'Authorization': token 
+                            'Authorization': token
                         }
                     })
                     const dataJSON = await response.json()
