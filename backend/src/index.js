@@ -50,6 +50,33 @@ app.use(fileUpload());
 app.use(require('./routes'));
 
 /**
+ * -------------- Error Handling ----------------
+ * Define error-handling middleware functions in the same way as other
+ * middleware functions, except error-handling functions have four arguments
+ * instead of three: (err, req, res, next).
+ *
+ * You define error-handling middleware last, after other app.use() and routes
+ * calls
+ */
+app.use((err, req, res, next) => {
+  /**
+   * If you call next() with an error after you have started writing the
+   * response (for example, if you encounter an error while streaming the
+   * response to the client) the Express default error handler closes the
+   * connection and fails the request. So when you add a custom error handler,
+   * you must delegate to the default Express error handler, when the headers
+   * have already been sent to the client:
+   */
+  if (res.headersSent) {
+    return next(err);
+  }
+
+  // The 'catch all' error handling function
+  res.status(500);
+  res.render('error', { error: err });
+});
+
+/**
  * -------------- SERVER ----------------
  */
 

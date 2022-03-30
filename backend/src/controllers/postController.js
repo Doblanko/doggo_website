@@ -10,7 +10,7 @@ const mongoose = require('mongoose');
 
 const Post = mongoose.model('Post');
 
-const savePost = (req, res) => {
+const savePost = (req, res, next) => {
   // create a new post with the Post Model
   const newPost = new Post({
     user: 'GET THE USERRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR',
@@ -49,10 +49,7 @@ const savePost = (req, res) => {
         res.send('File Uploaded!');
       });
     })
-    .catch((err) => {
-      console.log(err);
-      console.log('Error saving post.');
-    });
+    .catch(next);
 };
 
 module.exports.savePost = savePost;

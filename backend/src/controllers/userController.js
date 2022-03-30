@@ -11,8 +11,7 @@ const User = mongoose.model('User');
 
 const utils = require('../utils');
 
-// removed the next parameter since it wasn't used
-const register = (req, res) => {
+const register = (req, res, next) => {
   // create a new user with the User Model
   // the model will hash the password with the pre hook
   const newUser = new User({
@@ -35,9 +34,9 @@ const register = (req, res) => {
     .then((user) => {
       res.json({ success: true, user });
     })
-    .catch((err) => {
-      res.json({ success: false, message: err.message });
-    });
+    .catch(next);
+  // Provide next as the final catch handler and express will catch errors
+  // because the catch handler is givent the error as the first argument
 };
 
 // removed the next parameter since it wasn't used
